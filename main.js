@@ -80,8 +80,6 @@ async function main() {
     }
 
     const binaryData = Buffer.concat(buff);
-    console.log(binaryData);
-  
     
     axios.post('http://localhost:8084/v1/avro',
     {
