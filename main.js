@@ -43,7 +43,7 @@ function getDataTime(date) {
 }
 
 async function main() {
-    let cur_date_time = getDataTime(new Date());
+    let data_time = getDataTime(new Date());
     let logicalTypeDefs = { 'local-timestamp-millis': DateType };
     let schemaPath = path.resolve('./ParkingLotStatus.avsc');
     let schema = avro.parse(schemaPath, { logicalTypes: logicalTypeDefs });
@@ -52,7 +52,7 @@ async function main() {
 
     data.info.forEach((item) => {
         item.id = Number(item.id);
-        item.date_time = cur_date_time;
+        item.date_time = data_time;
         encoder.write(item);
     });
     encoder.end();
