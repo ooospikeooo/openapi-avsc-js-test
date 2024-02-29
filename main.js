@@ -87,7 +87,7 @@ async function main() {
     {
         avro: Buffer.from(binaryData).toString('base64')
     }).then( (res) => {
-        console.log(res);
+        console.log(res.data);
     })
 }
 
