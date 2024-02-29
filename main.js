@@ -1,6 +1,5 @@
 const path = require('node:path');
 const avro = require('avsc');
-const assert = require('assert');
 const data = require('./info');
 const axios = require('axios');
 
