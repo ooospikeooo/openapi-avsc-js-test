@@ -1,6 +1,5 @@
 const path = require('node:path');
 const avro = require('avsc');
-const data = require('./info');
 const axios = require('axios');
 
 class DateType extends avro.types.LogicalType {
@@ -32,6 +31,17 @@ class DateType extends avro.types.LogicalType {
     }
 }
 
+async function getOpenApiData(url, parameters) {
+    try {
+        const response = await axios.get(url, { params: parameters });
+        return response.data;
+    } catch (error) {
+        console.error(`Error: ${error}`);
+        return null;
+    }
+}
+
+
 function getDataTime(date) {
     const denom = 10;
     const roundedDate = new Date(date);
@@ -50,6 +60,13 @@ async function main() {
 
     let encoder = new avro.streams.BlockEncoder(schema);
 
+    const apiKey = '';
+    const apiUrl = `http://api.jejuits.go.kr/api/infoParkingStateList`;
+    let data = await getOpenApiData(apiUrl, { code: apiKey })
+        .catch(error => {
+            console.error(`Error: ${error}`);
+        });
+
     data.info.forEach((item) => {
         item.id = Number(item.id);
         item.date_time = data_time;
@@ -64,10 +81,8 @@ async function main() {
 
     const binaryData = Buffer.concat(buff);
     console.log(binaryData);
-
-
-    const apiKey = '';
-    const apiUrl = `http://api.jejuits.go.kr/api/infoParkingStateList`;
+  
+    
     axios.post('http://localhost:8084/v1/avro',
     {
         avro: Buffer.from(binaryData).toString('base64')
